@@ -4,16 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
+use App\IdeaStatus;
 use App\Models\Idea;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IdeaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $ideas = Idea::query()
+            ->where('user_id', Auth::id())
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $status = IdeaStatus::tryFrom($request->status);
+
+                return $status ? $query->where('status', $status) : $query;
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $counts = Idea::statusCount(Auth::user());
+
+        return view('ideas.index', compact('ideas', 'counts'));
     }
 
     /**

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->json('links');
-            $table->enum('status',['pending','completed','in_progress'])->default('pending');
+            $table->enum('status', ['pending', 'completed', 'in_progress'])->default('pending');
             $table->string('image_path')->nullable();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

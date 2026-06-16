@@ -20,7 +20,7 @@ class LoginTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response = $this->post(route('login.store'),[
+        $response = $this->post(route('login.store'), [
             'email' => 'john@doe.com',
             'password' => 'password123',
         ]);
