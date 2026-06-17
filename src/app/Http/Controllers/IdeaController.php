@@ -42,7 +42,7 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreIdeaRequest $request)
+    public function store(StoreIdeaRequest $request): \Illuminate\Http\RedirectResponse
     {
         Auth::user()->ideas()->create($request->validated());
         return redirect()->route('ideas.index')->with('success', 'Idea created successfully');

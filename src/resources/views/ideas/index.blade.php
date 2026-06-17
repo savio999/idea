@@ -76,17 +76,18 @@
                         <x-form.error name="status"/>
                     </div>
                     <div>
-                        <fieldset class="space-y-3">
-                            <legend class="label">Links</legend>
-                            <template x-for="link in links">
+                            <template x-for="(link, index) in links" :key="index">
                                 <div class="flex gap-x-2 items-center">
-                                    <input type="text" name="links[]" x-model="link" class="input">
+                                    <input type="url" name="links[]" x-model="links[index]" class="input">
                                     <button 
                                         type="button" 
-                                        @click="links.splice(links.indexOf(link), 1)"
+                                        @click="links.splice(index, 1)"
                                         aria-label="Remove link"
                                     >
                                         x
+                                    </button>
+                                </div>
+                            </template>
                                     </button>
                                 </div>
                             </template>
