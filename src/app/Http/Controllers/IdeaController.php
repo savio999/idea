@@ -6,6 +6,7 @@ use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
 use App\IdeaStatus;
 use App\Models\Idea;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,9 +43,10 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreIdeaRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(StoreIdeaRequest $request): RedirectResponse
     {
         Auth::user()->ideas()->create($request->validated());
+
         return redirect()->route('ideas.index')->with('success', 'Idea created successfully');
     }
 

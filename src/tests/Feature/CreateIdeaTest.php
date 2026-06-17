@@ -41,5 +41,4 @@ class CreateIdeaTest extends TestCase
 
         $this->assertSame($links, $idea->links->getArrayCopy());
     }
-
 }

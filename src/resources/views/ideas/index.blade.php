@@ -76,40 +76,37 @@
                         <x-form.error name="status"/>
                     </div>
                     <div>
-                            <template x-for="(link, index) in links" :key="index">
-                                <div class="flex gap-x-2 items-center">
-                                    <input type="url" name="links[]" x-model="links[index]" class="input">
-                                    <button 
-                                        type="button" 
-                                        @click="links.splice(index, 1)"
-                                        aria-label="Remove link"
-                                    >
-                                        x
-                                    </button>
-                                </div>
-                            </template>
-                                    </button>
-                                </div>
-                            </template>
-                            <div class="flex gap-x-2 items-center">
-                                <input 
-                                    x-model="newLink"
-                                    type="url" 
-                                    placeholder="https://example.com" 
-                                    autocomplete="off" 
-                                    class="input flex-1" 
-                                    spellcheck="false" 
-                                />
-
+                        <label class="label">Links</label>
+                        <template x-for="(link, index) in links" :key="index">
+                            <div class="flex gap-x-2 items-center">                                    
+                                <input type="url" name="links[]" x-model="links[index]" class="input">
                                 <button 
                                     type="button" 
-                                    @click="links.push(newLink.trim()); newLink = ''"
-                                    :disabled="newLink.trim().length === 0"
+                                    @click="links.splice(index, 1)"
+                                    aria-label="Remove link"
                                 >
-                                    +
+                                    x
                                 </button>
                             </div>
-                        </fieldset>
+                        </template>
+                        <div class="flex gap-x-2 items-center">
+                            <input 
+                                x-model="newLink"
+                                type="url" 
+                                placeholder="https://example.com" 
+                                autocomplete="off" 
+                                class="input flex-1" 
+                                spellcheck="false" 
+                            />
+
+                            <button 
+                                type="button" 
+                                @click="links.push(newLink.trim()); newLink = ''"
+                                :disabled="newLink.trim().length === 0"
+                            >
+                                +
+                            </button>
+                        </div>
                     </div>
 
                     <div class="flex justify-end gap-x-3 pt-2">
