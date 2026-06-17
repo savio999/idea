@@ -16,12 +16,20 @@ class Idea extends Model
     /** @use HasFactory<IdeaFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'links',
+        'status',
+    ];
+
     protected $casts = [
         'links' => AsArrayObject::class,
         'status' => IdeaStatus::class,
     ];
 
     protected $attributes = [
+        'links' => '[]',
         'status' => IdeaStatus::Pending->value,
     ];
 

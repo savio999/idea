@@ -44,7 +44,8 @@ class IdeaController extends Controller
      */
     public function store(StoreIdeaRequest $request)
     {
-        //
+        Auth::user()->ideas()->create($request->validated());
+        return redirect()->route('ideas.index')->with('success', 'Idea created successfully');
     }
 
     /**
@@ -52,7 +53,7 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        //
+        return view('ideas.show', compact('idea'));
     }
 
     /**
@@ -76,6 +77,8 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
-        //
+        $idea->delete();
+
+        return redirect()->route('ideas.index');
     }
 }
