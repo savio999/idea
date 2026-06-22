@@ -9,5 +9,4 @@
     @else
         <input type="{{ $type }}" name="{{ $name }}" id="{{ $name }}" {{ $attributes }} class="input"/>
     @endif
-    <x-form.error name="{{ $name }}" />
 </div>

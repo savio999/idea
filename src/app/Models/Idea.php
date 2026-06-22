@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
     'description',
     'links',
     'status',
+    'image_path',
 ])]
 class Idea extends Model
 {

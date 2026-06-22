@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateIdea;
 use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
 use App\IdeaStatus;
@@ -43,9 +44,9 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreIdeaRequest $request): RedirectResponse
+    public function store(StoreIdeaRequest $request, CreateIdea $createIdea): RedirectResponse
     {
-        Auth::user()->ideas()->create($request->validated());
+        $createIdea->handle($request->validated());
 
         return redirect()->route('ideas.index')->with('success', 'Idea created successfully');
     }

@@ -28,6 +28,11 @@
             <div class="grid md:grid-cols-2 gap-6">
                 @forelse($ideas as $idea)
                     <x-card href="{{ route('ideas.show', $idea) }}">
+                        @if($idea->image_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($idea->image_path))                
+                            <div class="mb-4 -mx-4 -mt-4 rounded-lg overflow-hidden">
+                                <img src="{{ asset('storage/' . $idea->image_path) }}" alt="{{ $idea->title }}" class="w-full h-auto object-cover">                
+                            </div>    
+                        @endif  
                         <h3 class="text-foreground text-lg">{{ $idea->title }}</h3>
                         <x-status-label status="{{ $idea->status }}">
                             {{ $idea->status->label() }}
@@ -46,13 +51,39 @@
         {{-- modal --}}
         <x-modal name="create-idea" title="New idea">
             <form 
-                x-data="{status: 'pending', links: [], newLink: ''}" 
+                x-data="{
+                    status: @js(old('status', \App\IdeaStatus::Pending->value)),
+                    links: @js(old('links', [])),
+                    newLink: '',
+                    steps: @js(old('steps', [])),
+                    newStep: '',
+                    addStep() {
+                        if (this.newStep.trim().length === 0) {
+                            return;
+                        }
+
+                        this.steps.push(this.newStep.trim());
+                        this.newStep = '';
+                    },
+                    addLink() {
+                        if (this.newLink.trim().length === 0) {
+                            return;
+                        }
+
+                        this.links.push(this.newLink.trim());
+                        this.newLink = '';
+                    },
+                }" 
+                @if($errors->any())
+                    x-init="$nextTick(() => $dispatch('open-modal', 'create-idea'))"
+                @endif
                 action="{{ route('ideas.store') }}" 
                 method="POST"
+                enctype="multipart/form-data"
             >
                 @csrf                
                 <div class="space-y-6">
-                    <x-form.field name="title" type="text" placeholder="Enter your idea title" autofocus required/>
+                    <x-form.field name="title" type="text" placeholder="Enter your idea title"  value="{{ old('title') }}" autofocus required/>
                     <x-form.error name="title"/>
                     <x-form.field name="description" label="Description" type="textarea" placeholder="Enter your idea description" />
                     <x-form.error name="description"/>
@@ -75,11 +106,50 @@
                         </div>
                         <x-form.error name="status"/>
                     </div>
+                    <div class="space-y-2">
+                        <label for="image">Image</label>
+                        <input type="file" name="image" id="image" class="file-input" accept="image/*">
+                        <x-form.error name="image"/>
+                    </div>
+
+                    <div>
+                        <label class="label">Steps</label>
+                        <template x-for="(step, index) in steps" :key="index">
+                            <div class="flex gap-x-2 items-center">                                    
+                                <input type="text" name="steps[]" x-model="steps[index]" class="input" readonly>
+                                <button 
+                                    type="button" 
+                                    @click="steps.splice(index, 1)"
+                                    aria-label="Remove step"
+                                >
+                                    x
+                                </button>
+                            </div>
+                        </template>
+                        <div class="flex gap-x-2 items-center">
+                            <input 
+                                x-model="newStep"
+                                placeholder="Enter a step" 
+                                autocomplete="off" 
+                                class="input flex-1" 
+                                spellcheck="false" 
+                                @keydown.enter.prevent="addStep()"
+                            />
+
+                            <button 
+                                type="button" 
+                                @click="addStep()"
+                                :disabled="newStep.trim().length === 0"
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
                     <div>
                         <label class="label">Links</label>
                         <template x-for="(link, index) in links" :key="index">
                             <div class="flex gap-x-2 items-center">                                    
-                                <input type="url" name="links[]" x-model="links[index]" class="input">
+                                <input type="url" name="links[]" x-model="links[index]" class="input" readonly>
                                 <button 
                                     type="button" 
                                     @click="links.splice(index, 1)"
@@ -97,11 +167,12 @@
                                 autocomplete="off" 
                                 class="input flex-1" 
                                 spellcheck="false" 
+                                @keydown.enter.prevent="addLink()"
                             />
 
                             <button 
                                 type="button" 
-                                @click="links.push(newLink.trim()); newLink = ''"
+                                @click="addLink()"
                                 :disabled="newLink.trim().length === 0"
                             >
                                 +
