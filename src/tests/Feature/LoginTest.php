@@ -38,7 +38,7 @@ class LoginTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response = $this->actingAs($user)->get(route('logout'));
+        $response = $this->actingAs($user)->post(route('logout'));
         $this->assertGuest();
         $response->assertRedirect(route('home'));
     }

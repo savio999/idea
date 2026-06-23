@@ -8,6 +8,7 @@
                 <a href="{{ route('login') }}">Login</a>
                 <a class="btn" href="{{ route('register') }}">Register</a>
             @else
+                <a href="{{ route('profile.edit') }}" class="btn btn-outlined">Edit Profile</a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-ghost">Logout</button>

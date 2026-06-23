@@ -85,7 +85,7 @@
                 <div class="space-y-6">
                     <x-form.field name="title" type="text" placeholder="Enter your idea title"  value="{{ old('title') }}" autofocus required/>
                     <x-form.error name="title"/>
-                    <x-form.field name="description" label="Description" type="textarea" placeholder="Enter your idea description" />
+                    <x-form.field name="description" label="Description" type="textarea" placeholder="Enter your idea description" textValue="{{ old('description') }}" />
                     <x-form.error name="description"/>
 
                     <div class="space-y-2">
